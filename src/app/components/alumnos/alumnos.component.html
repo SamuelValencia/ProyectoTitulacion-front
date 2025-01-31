@@ -1,0 +1,125 @@
+<div class="alumnos-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>{{ isEditing ? 'Editar Alumno' : 'Registrar Nuevo Alumno' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="alumnoForm" (ngSubmit)="agregarAlumno()" class="alumno-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" placeholder="Ingrese el nombre">
+            <mat-error *ngIf="alumnoForm.get('nombre')?.invalid && alumnoForm.get('nombre')?.touched">
+              {{ getErrorMessage('nombre') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="apellido" placeholder="Ingrese el apellido">
+            <mat-error *ngIf="alumnoForm.get('apellido')?.invalid && alumnoForm.get('apellido')?.touched">
+              {{ getErrorMessage('apellido') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Cédula</mat-label>
+            <input matInput formControlName="cedula" placeholder="Ingrese la cédula">
+            <mat-error *ngIf="alumnoForm.get('cedula')?.invalid && alumnoForm.get('cedula')?.touched">
+              {{ getErrorMessage('cedula') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Carrera</mat-label>
+            <mat-select formControlName="carrera">
+              <mat-option *ngFor="let carrera of carreras" [value]="carrera">
+                {{ carrera }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="alumnoForm.get('carrera')?.invalid && alumnoForm.get('carrera')?.touched">
+              {{ getErrorMessage('carrera') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="tesis-field">
+            <mat-label>Nombre de la Tesis</mat-label>
+            <input matInput formControlName="tesis" placeholder="Ingrese el nombre de la tesis">
+            <mat-error *ngIf="alumnoForm.get('tesis')?.invalid && alumnoForm.get('tesis')?.touched">
+              {{ getErrorMessage('tesis') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="alumnoForm.invalid">
+            <mat-icon>{{ isEditing ? 'save' : 'add' }}</mat-icon>
+            {{ isEditing ? 'Actualizar' : 'Agregar' }} Alumno
+          </button>
+          <button mat-button type="button" *ngIf="isEditing" (click)="cancelarEdicion()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Lista de Alumnos</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="students" class="mat-elevation-z8">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let element">{{element.nombre}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="apellido">
+          <th mat-header-cell *matHeaderCellDef>Apellido</th>
+          <td mat-cell *matCellDef="let element">{{element.apellido}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cedula">
+          <th mat-header-cell *matHeaderCellDef>Cédula</th>
+          <td mat-cell *matCellDef="let element">{{element.cedula}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="carrera">
+          <th mat-header-cell *matHeaderCellDef>Carrera</th>
+          <td mat-cell *matCellDef="let element">{{element.carrera}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tesis">
+          <th mat-header-cell *matHeaderCellDef>Tesis</th>
+          <td mat-cell *matCellDef="let element">{{element.tesis}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <button mat-icon-button color="primary" (click)="editarAlumno(element, i)" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="eliminarAlumno(i)" matTooltip="Eliminar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- No data message -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6">No hay alumnos registrados</td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

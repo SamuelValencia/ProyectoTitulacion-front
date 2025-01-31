@@ -1,0 +1,73 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Búsqueda de Propuestas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="searchForm" class="search-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Cédula</mat-label>
+          <input matInput formControlName="cedula" placeholder="Ingrese la cédula" (input)="buscarPorCedula()">
+          <button mat-icon-button matSuffix (click)="buscarPorCedula()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="loading-spinner" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card class="results-card">
+    <mat-card-content>
+      <table mat-table [dataSource]="filteredPropuestas" class="mat-elevation-z8">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let propuesta">{{ propuesta.nombre }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="apellido">
+          <th mat-header-cell *matHeaderCellDef>Apellido</th>
+          <td mat-cell *matCellDef="let propuesta">{{ propuesta.apellido }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cedula">
+          <th mat-header-cell *matHeaderCellDef>Cédula</th>
+          <td mat-cell *matCellDef="let propuesta">{{ propuesta.cedula }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="curso">
+          <th mat-header-cell *matHeaderCellDef>Curso</th>
+          <td mat-cell *matCellDef="let propuesta">{{ propuesta.curso }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="propuesta">
+          <th mat-header-cell *matHeaderCellDef>Propuesta</th>
+          <td mat-cell *matCellDef="let propuesta">{{ propuesta.propuesta }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <button mat-icon-button color="primary" (click)="editarPropuesta(element, i)" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="eliminarPropuesta(i)" matTooltip="Eliminar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['nombre', 'apellido', 'cedula', 'curso', 'propuesta', 'acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['nombre', 'apellido', 'cedula', 'curso', 'propuesta', 'acciones'];"></tr>
+
+        <!-- No data message -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6">No se encontraron propuestas</td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
